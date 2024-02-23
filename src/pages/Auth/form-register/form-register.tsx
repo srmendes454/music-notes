@@ -7,7 +7,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMain } from "../../../store/MainProvider";
 import IFormRegister from "../../../models/RegisterModel";
 import { toast } from "react-toastify";
-import cardLoginRegisterStyle from '../../../components/CardAuth/CardAuth.module.scss';
+import cardLoginRegisterStyle from "../../../components/CardAuth/CardAuth.module.scss";
+import AuthService from "../../../services/AuthService";
 
 const RegisterFormSchema = z
   .object({
@@ -51,24 +52,28 @@ function FormRegister() {
     resolver: zodResolver(RegisterFormSchema),
   });
 
-  function Register(data: IFormRegister) {
+  async function Register(data: IFormRegister) {
     setIsGlobalLoading(true);
-    const result = data;
-    if (result !== null) {
-      toast.success("Usuário cadastrado com sucesso!", {
-        position: "bottom-center",
-        autoClose: 3000,
-        theme: "dark"
-      });
-      document.getElementById("container")?.classList.toggle(cardLoginRegisterStyle.active)
-    } else {
-      toast.warning("Erro interno", {
-        position: "bottom-center",
-        autoClose: 3000,
-        theme: "dark"
-      });
-    }
-    setIsGlobalLoading(false);
+    try {
+      const result = await AuthService.Register(data);
+      if (result.data.success === true) {
+        toast.success(result.data.message, {
+          position: "bottom-center",
+          autoClose: 3000,
+          theme: "dark",
+        });
+        document
+          .getElementById("container")
+          ?.classList.toggle(cardLoginRegisterStyle.active);
+      } else {
+        toast.warning("Erro interno", {
+          position: "bottom-center",
+          autoClose: 3000,
+          theme: "dark",
+        });
+      }
+      setIsGlobalLoading(false);
+    } catch (error) { setIsGlobalLoading(false); }
   }
 
   return (

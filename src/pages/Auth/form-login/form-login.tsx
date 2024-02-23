@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMain } from "../../../store/MainProvider";
 import { toast } from "react-toastify";
 import IFormLogin from "../../../models/LoginModel";
+import AuthService from "../../../services/AuthService";
 
 const LoginFormSchema = z.object({
   email: z
@@ -31,24 +32,26 @@ function FormLogin() {
     resolver: zodResolver(LoginFormSchema),
   });
 
-  function Login(data: IFormLogin) {
+  async function Login(data: IFormLogin) {
     setIsGlobalLoading(true);
-    const result = data;
-    if (result !== null) {
-      toast.success("Sucesso", {
-        position: "bottom-center",
-        autoClose: 5000,
-        theme: "dark",
-        onClose: () => window.location.href = "/home"
-      });
-    } else {
-      toast.warning("Error interno", {
-        position: "bottom-center",
-        autoClose: 5000,
-        theme: "dark",
-      });
-    }
-    setIsGlobalLoading(false);
+    try {
+      const result = await AuthService.Login(data);
+      if (result.data.success === true) {
+        toast.success(result.data.message, {
+          position: "bottom-center",
+          autoClose: 5000,
+          theme: "dark",
+          onClose: () => (window.location.href = "/home"),
+        });
+      } else {
+        toast.warning(result.data.message, {
+          position: "bottom-center",
+          autoClose: 5000,
+          theme: "dark",
+        });
+      }
+      setIsGlobalLoading(false);
+    } catch (error) { setIsGlobalLoading(false); }
   }
 
   return (

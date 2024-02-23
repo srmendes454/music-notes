@@ -8,9 +8,10 @@ import { useMain } from "../../../store/MainProvider";
 import { useForm } from "react-hook-form";
 import IFormResetPassword from "../../../models/ResetPasswordModel";
 import { toast } from "react-toastify";
+import AuthService from "../../../services/AuthService";
 
 const ResetPaswwordFormSchema = z.object({
-    email: z.string().nonempty('O email é obrigatório').email('Formato inválido')
+  email: z.string().nonempty("O email é obrigatório").email("Formato inválido"),
 });
 
 type ResetPaswwordFormData = z.infer<typeof ResetPaswwordFormSchema>;
@@ -18,28 +19,34 @@ function FormResetPassword() {
   const navigate = useNavigate();
   const { setIsGlobalLoading } = useMain();
 
-  const { register, handleSubmit, formState: { errors } } = useForm<ResetPaswwordFormData>({
-    resolver: zodResolver(ResetPaswwordFormSchema)
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ResetPaswwordFormData>({
+    resolver: zodResolver(ResetPaswwordFormSchema),
   });
 
-  function ResetPassword(data: IFormResetPassword) {
+  async function ResetPassword(data: IFormResetPassword) {
     setIsGlobalLoading(true);
-    if (data !== null){
-      toast.success("Sua senha foi enviada para seu email cadastrado!", {
-        position: "bottom-center",
-        autoClose: 3000,
-        theme: "dark",
-        onClose: () => (window.location.href = "/login"),
-      });
-    }
-    else{
-      toast.warning("Erro interno", {
-        position: "bottom-center",
-        autoClose: 3000,
-        theme: "dark"
-      });
-    }
-    setIsGlobalLoading(false);
+    try {
+      const result = await AuthService.ResetPassword(data);
+      if (result.data.success === true) {
+        toast.success(result.data.message, {
+          position: "bottom-center",
+          autoClose: 3000,
+          theme: "dark",
+          onClose: () => (window.location.href = "/login"),
+        });
+      } else {
+        toast.warning("Erro interno", {
+          position: "bottom-center",
+          autoClose: 3000,
+          theme: "dark",
+        });
+      }
+      setIsGlobalLoading(false);
+    } catch (error) { setIsGlobalLoading(false); }
   }
 
   return (
@@ -55,7 +62,9 @@ function FormResetPassword() {
         validator={register}
         propertyValidator="email"
       />
-      {errors.email && (<span className={style.validation}>{errors.email.message}</span>)}
+      {errors.email && (
+        <span className={style.validation}>{errors.email.message}</span>
+      )}
       <div className={style.button}>
         <p className={style.resetPassword} onClick={() => navigate("/login")}>
           → Cancelar ←
