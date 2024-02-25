@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import style from "./Header.module.scss";
 import { useState } from "react";
 import classNames from "classnames";
+import logo from '../../assets/Logo-Secundary.svg'
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 function Header() {
@@ -16,7 +17,7 @@ function Header() {
   return (
     <header className={style.header}>
       <div className={style.logo}>
-        <span onClick={() => navigate("/home")} />
+        <img src={logo} alt="Logo" onClick={() => navigate("/home")} />
       </div>
       <div className={style.notification}>
         <i className="bi bi-bell-fill"></i>

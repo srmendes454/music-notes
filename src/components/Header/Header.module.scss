@@ -10,7 +10,7 @@
     align-items: center;
     justify-content: center;
     height: 100%;
-    width: 60px;
+    width: auto;
     cursor: pointer;
 
     &:hover {
@@ -19,8 +19,8 @@
     }
 
     img {
-      height: 90%;
-      margin-left: 1px;
+      height: 60%;
+      margin-left: 3px;
     }
   }
 

@@ -11,7 +11,7 @@ function Home() {
       onAddClick={() => {
         setOpenAdd(true);
       }}
-      breadcrumb={["Modulos"]}
+      breadcrumb={["Modulos", "Teste", "Testando", "God is very good!"]}
       title="Meus modulos"
       functionReload={true}
     />

@@ -1,0 +1,46 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  column-gap: 5px;
+  opacity: 50%;
+  cursor: pointer;
+
+  &::after {
+    content: "|";
+    color: var(--dark-gray);
+  }
+
+  &:last-child:after {
+    display: none;
+  }
+
+  &:hover {
+    opacity: 100%;
+    transition: all 0.5s;
+  }
+
+  i {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 10px;
+    color: var(--dark-gray);
+  }
+
+  p {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--dark-gray);
+    opacity: 50%;
+  }
+}
+
+.container.active:last-child {
+  i,
+  p {
+    opacity: 100%;
+    color: var(--primary);
+  }
+}

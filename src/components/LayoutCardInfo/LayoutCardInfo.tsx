@@ -1,3 +1,4 @@
+import { Breadcrumb } from '../Breadcrumb/Breadcrumb';
 import style from './LayoutCardInfo.module.scss';
 import "bootstrap-icons/font/bootstrap-icons.css";
 
@@ -19,7 +20,11 @@ function LayoutCardInfo(props: CardInfoProps) {
     return (
         <div className={style.card}>
             <header className={style.breadcrumb}>
-                <p>{breadcrumb}</p>
+                {breadcrumb?.map((bread, key) => {
+                    return(
+                        <Breadcrumb key={key} icon='bi bi-columns-gap' name={bread} route='/login' /> 
+                    )
+                })}
             </header>
             <div className={style.title}>
                 <h1>{isSelect ? select : title}</h1>
